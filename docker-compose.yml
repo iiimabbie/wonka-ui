@@ -1,0 +1,7 @@
+services:
+  wonka-ui:
+    build: .
+    container_name: wonka-ui
+    restart: unless-stopped
+    ports:
+      - "8092:80"

@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* Claude-inspired theme */
+:root {
+  --color-bg: #FAF9F5;
+  --color-card: #FFFFFF;
+  --color-primary: #D97706;
+  --color-primary-hover: #B45309;
+  --color-text: #1A1A1A;
+  --color-text-secondary: #6B7280;
+  --color-border: #E5E7EB;
+  --color-up: #EF4444;
+  --color-down: #10B981;
+  --color-accent: #F59E0B;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
