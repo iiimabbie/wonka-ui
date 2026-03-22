@@ -72,11 +72,11 @@ export default function Market() {
             {events.slice(1).map((ev, i) => {
               const date = ev.happened_at?.slice(0, 10) || ''
               return (
-                <div key={i} className="flex gap-3 text-sm py-2 border-b last:border-b-0" style={{ borderColor: 'var(--color-border)' }}>
-                  <span className="shrink-0 text-xs py-0.5 px-2 rounded-full bg-gray-100" style={{ color: 'var(--color-text-secondary)' }}>
+                <div key={i} className="flex items-start gap-3 text-sm py-2 border-b last:border-b-0" style={{ borderColor: 'var(--color-border)' }}>
+                  <span className="shrink-0 text-xs py-0.5 px-2 rounded-full bg-gray-100 whitespace-nowrap" style={{ color: 'var(--color-text-secondary)' }}>
                     {date}
                   </span>
-                  <span>{ev.description}</span>
+                  <span className="leading-relaxed">{ev.description}</span>
                 </div>
               )
             })}
