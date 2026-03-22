@@ -73,3 +73,7 @@ export async function getMarketItems() {
 export async function getPriceHistory(itemId: string, limit = 100) {
   return apiFetch(`/v1/market/prices?item_id=${itemId}&limit=${limit}`)
 }
+
+export async function getMarketEvents(limit = 14) {
+  return apiFetch(`/v1/market/events?limit=${limit}`)
+}

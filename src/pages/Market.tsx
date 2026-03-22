@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
-import { getMarket } from '../lib/api'
+import { getMarket, getMarketEvents } from '../lib/api'
 
 export default function Market() {
   const [data, setData] = useState<any>(null)
+  const [events, setEvents] = useState<any[]>([])
 
-  useEffect(() => { getMarket().then(setData) }, [])
+  useEffect(() => {
+    getMarket().then(setData)
+    getMarketEvents(14).then(d => setEvents(d.events || []))
+  }, [])
 
   if (!data) return <div className="text-center py-12 text-gray-400">載入中...</div>
 
@@ -58,6 +62,26 @@ export default function Market() {
 
       {(!data.listings || data.listings.length === 0) && (
         <p className="text-center py-8 text-gray-400">目前沒有上架物品，等待下次刷新 ⏳</p>
+      )}
+
+      {/* Past events */}
+      {events.length > 1 && (
+        <div className="bg-white rounded-2xl p-5 shadow-sm border" style={{ borderColor: 'var(--color-border)' }}>
+          <h3 className="font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>📜 過往事件</h3>
+          <div className="space-y-2">
+            {events.slice(1).map((ev, i) => {
+              const date = ev.happened_at?.slice(0, 10) || ''
+              return (
+                <div key={i} className="flex gap-3 text-sm py-2 border-b last:border-b-0" style={{ borderColor: 'var(--color-border)' }}>
+                  <span className="shrink-0 text-xs py-0.5 px-2 rounded-full bg-gray-100" style={{ color: 'var(--color-text-secondary)' }}>
+                    {date}
+                  </span>
+                  <span>{ev.description}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
       )}
     </div>
   )
