@@ -22,7 +22,7 @@ export default function PriceChart() {
     getPriceHistory(selected, 100).then(d => {
       const pts = (d.prices || []).reverse().map((p: any) => ({
         ...p,
-        time: p.created_at?.slice(5, 16).replace('T', ' '),
+        time: p.refreshed_at?.slice(5, 16).replace('T', ' '),
       }))
       setPrices(pts)
       setLoading(false)
@@ -94,17 +94,7 @@ export default function PriceChart() {
           <p className="text-center py-12 text-gray-400">還沒有價格紀錄，等待市場刷新 ⏳</p>
         )}
 
-        {/* Event log under chart */}
-        {prices.filter(p => p.event_desc).length > 0 && (
-          <div className="mt-4 space-y-2">
-            <p className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>相關事件</p>
-            {prices.filter(p => p.event_desc).map((p, i) => (
-              <div key={i} className="text-xs px-3 py-2 bg-amber-50 rounded-lg">
-                <span className="text-amber-600">{p.time}</span> · {p.event_desc}
-              </div>
-            ))}
-          </div>
-        )}
+
       </div>
     </div>
   )
