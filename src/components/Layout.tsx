@@ -23,6 +23,7 @@ export default function Layout() {
     { to: '/market', label: '🏪 菜市場' },
     { to: '/inventory', label: '🎒 背包' },
     { to: '/leaderboard', label: '🏆 排行榜' },
+    { to: '/prices', label: '📈 走勢' },
     { to: '/history', label: '📖 帳本' },
   ]
 
@@ -58,12 +59,21 @@ export default function Layout() {
               ))}
             </nav>
           </div>
-          {balance !== null && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium"
-                 style={{ backgroundColor: '#FEF3C7', color: 'var(--color-primary)' }}>
-              🍬 {balance} · {agent}
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {balance !== null && (
+              <div className="px-3 py-1.5 rounded-full text-sm font-medium"
+                   style={{ backgroundColor: '#FEF3C7', color: 'var(--color-primary)' }}>
+                🍬 {balance} · {agent}
+              </div>
+            )}
+            <button
+              onClick={() => { localStorage.removeItem('wonka_api_key'); window.location.href = '/login' }}
+              className="px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-gray-100"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              登出
+            </button>
+          </div>
         </div>
       </header>
 

@@ -65,3 +65,11 @@ export async function transfer(toAgent: string, amount: number, reason: string, 
 export async function getTransferHistory(limit = 50, offset = 0) {
   return apiFetch(`/v1/transfers/history?limit=${limit}&offset=${offset}`)
 }
+
+export async function getMarketItems() {
+  return apiFetch('/v1/market/items')
+}
+
+export async function getPriceHistory(itemId: string, limit = 100) {
+  return apiFetch(`/v1/market/prices?item_id=${itemId}&limit=${limit}`)
+}

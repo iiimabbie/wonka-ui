@@ -5,6 +5,7 @@ import Market from './pages/Market'
 import Inventory from './pages/Inventory'
 import Leaderboard from './pages/Leaderboard'
 import History from './pages/History'
+import PriceChart from './pages/PriceChart'
 import Login from './pages/Login'
 
 function isLoggedIn() {
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/history" element={<History />} />
+          <Route path="/prices" element={<PriceChart />} />
         </Route>
       </Routes>
     </BrowserRouter>
