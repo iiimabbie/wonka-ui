@@ -1,27 +1,10 @@
 import { useEffect, useState } from 'react'
-import { getMarket, buyItem } from '../lib/api'
+import { getMarket } from '../lib/api'
 
 export default function Market() {
   const [data, setData] = useState<any>(null)
-  const [buying, setBuying] = useState<string | null>(null)
-  const [message, setMessage] = useState('')
 
-  const load = () => getMarket().then(setData)
-  useEffect(() => { load() }, [])
-
-  const handleBuy = async (listingId: string) => {
-    setBuying(listingId)
-    setMessage('')
-    const key = `buy-${listingId}-${Date.now()}`
-    const res = await buyItem(listingId, key)
-    if (res.status === 'ok') {
-      setMessage(`✅ 買到了 ${res.item}！花了 ${res.price} 🍬，剩餘 ${res.new_balance}`)
-      load()
-    } else {
-      setMessage(`❌ ${res.error || '購買失敗'}`)
-    }
-    setBuying(null)
-  }
+  useEffect(() => { getMarket().then(setData) }, [])
 
   if (!data) return <div className="text-center py-12 text-gray-400">載入中...</div>
 
@@ -35,10 +18,6 @@ export default function Market() {
           <p className="text-sm font-medium text-amber-800">📰 今日事件</p>
           <p className="text-amber-900 mt-1">{data.event.description}</p>
         </div>
-      )}
-
-      {message && (
-        <div className="bg-white border rounded-xl p-3 text-sm">{message}</div>
       )}
 
       {/* Listings */}
@@ -72,16 +51,6 @@ export default function Market() {
                   )}
                 </div>
               </div>
-              <button
-                onClick={() => handleBuy(item.id)}
-                disabled={buying === item.id}
-                className="mt-4 w-full py-2 rounded-xl text-sm font-medium text-white transition-colors cursor-pointer disabled:opacity-50"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-                onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)')}
-                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
-              >
-                {buying === item.id ? '購買中...' : '購買'}
-              </button>
             </div>
           )
         })}
