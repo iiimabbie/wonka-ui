@@ -35,7 +35,6 @@ export default function PriceChart() {
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">📈 價格走勢</h2>
 
-      {/* Item selector */}
       <div className="flex flex-wrap gap-2">
         {items.map(item => (
           <button
@@ -52,7 +51,6 @@ export default function PriceChart() {
         ))}
       </div>
 
-      {/* Chart */}
       <div className="bg-white rounded-2xl p-5 shadow-sm border" style={{ borderColor: 'var(--color-border)' }}>
         {selectedItem && (
           <div className="mb-4">
@@ -93,8 +91,6 @@ export default function PriceChart() {
         ) : (
           <p className="text-center py-12 text-gray-400">還沒有價格紀錄，等待市場刷新 ⏳</p>
         )}
-
-
       </div>
     </div>
   )

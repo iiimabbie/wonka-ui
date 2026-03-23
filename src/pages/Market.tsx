@@ -16,7 +16,6 @@ export default function Market() {
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">🏪 菜市場</h2>
 
-      {/* Event */}
       {data.event?.description && (
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
           <p className="text-sm font-medium text-amber-800">📰 今日事件</p>
@@ -24,7 +23,6 @@ export default function Market() {
         </div>
       )}
 
-      {/* Listings */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {data.listings?.map((item: any) => {
           const diff = item.price - item.base_price
@@ -64,7 +62,6 @@ export default function Market() {
         <p className="text-center py-8 text-gray-400">目前沒有上架物品，等待下次刷新 ⏳</p>
       )}
 
-      {/* Past events */}
       {events.length > 1 && (
         <div className="bg-white rounded-2xl p-5 shadow-sm border" style={{ borderColor: 'var(--color-border)' }}>
           <h3 className="font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>📜 過往事件</h3>

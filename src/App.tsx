@@ -7,9 +7,11 @@ import Leaderboard from './pages/Leaderboard'
 import History from './pages/History'
 import PriceChart from './pages/PriceChart'
 import Login from './pages/Login'
+import Register from './pages/Register'
+import MyAgents from './pages/MyAgents'
 
 function isLoggedIn() {
-  return !!localStorage.getItem('wonka_api_key')
+  return !!localStorage.getItem('wonka_token')
 }
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -21,6 +23,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route path="/" element={<Home />} />
           <Route path="/market" element={<Market />} />
@@ -28,6 +31,7 @@ export default function App() {
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/history" element={<History />} />
           <Route path="/prices" element={<PriceChart />} />
+          <Route path="/agents" element={<MyAgents />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,79 +1,93 @@
 const API_URL = import.meta.env.VITE_API_URL || 'https://wonka.linyuu.dev'
 
-async function apiFetch(path: string, options?: RequestInit) {
-  const apiKey = localStorage.getItem('wonka_api_key') || ''
+async function publicFetch(path: string) {
+  const res = await fetch(`${API_URL}${path}`)
+  return res.json()
+}
+
+async function userFetch(path: string, options?: RequestInit) {
+  const token = localStorage.getItem('wonka_token') || ''
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      'X-API-Key': apiKey,
+      'Authorization': `Bearer ${token}`,
       ...options?.headers,
     },
+  })
+  if (res.status === 401) {
+    localStorage.removeItem('wonka_token')
+    localStorage.removeItem('wonka_user')
+    window.location.href = '/login'
+    throw new Error('Unauthorized')
+  }
+  return res.json()
+}
+
+// Auth
+export async function login(email: string, password: string) {
+  const res = await fetch(`${API_URL}/v1/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
   })
   return res.json()
 }
 
-export async function getBalance() {
-  return apiFetch('/v1/candies/balance')
+export async function register(email: string, password: string, name?: string) {
+  const res = await fetch(`${API_URL}/v1/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, name }),
+  })
+  return res.json()
 }
 
+// User (auth required)
+export async function getProfile() {
+  return userFetch('/v1/user/profile')
+}
+
+export async function getMyAgents() {
+  return userFetch('/v1/agents')
+}
+
+export async function createAgent(name: string) {
+  return userFetch('/v1/agents/create', {
+    method: 'POST',
+    body: JSON.stringify({ name }),
+  })
+}
+
+export async function getAgentBalance(agentId: string) {
+  return userFetch(`/v1/agents/${agentId}/balance`)
+}
+
+export async function getAgentInventory(agentId: string) {
+  return userFetch(`/v1/agents/${agentId}/inventory`)
+}
+
+export async function getAgentHistory(agentId: string, limit = 50, offset = 0) {
+  return userFetch(`/v1/agents/${agentId}/history?limit=${limit}&offset=${offset}`)
+}
+
+// Public (no auth)
 export async function getMarket() {
-  return apiFetch('/v1/market')
-}
-
-export async function buyItem(listingId: string, idempotencyKey: string) {
-  return apiFetch('/v1/market/buy', {
-    method: 'POST',
-    body: JSON.stringify({ listing_id: listingId, idempotencyKey }),
-  })
-}
-
-export async function sellItem(inventoryId: string, idempotencyKey: string) {
-  return apiFetch('/v1/market/sell', {
-    method: 'POST',
-    body: JSON.stringify({ inventory_id: inventoryId, idempotencyKey }),
-  })
-}
-
-export async function getInventory() {
-  return apiFetch('/v1/inventory')
-}
-
-export async function getInventoryHistory(limit = 50, offset = 0) {
-  return apiFetch(`/v1/inventory/history?limit=${limit}&offset=${offset}`)
-}
-
-export async function getLeaderboard() {
-  return apiFetch('/v1/candies/leaderboard')
-}
-
-export async function getHistory(limit = 50, offset = 0) {
-  return apiFetch(`/v1/candies/history?limit=${limit}&offset=${offset}`)
-}
-
-export async function getSummary() {
-  return apiFetch('/v1/candies/summary')
-}
-
-export async function transfer(toAgent: string, amount: number, reason: string, idempotencyKey: string) {
-  return apiFetch('/v1/candies/transfer', {
-    method: 'POST',
-    body: JSON.stringify({ to_agent: toAgent, amount, reason, idempotencyKey }),
-  })
-}
-
-export async function getTransferHistory(limit = 50, offset = 0) {
-  return apiFetch(`/v1/transfers/history?limit=${limit}&offset=${offset}`)
+  return publicFetch('/v1/market')
 }
 
 export async function getMarketItems() {
-  return apiFetch('/v1/market/items')
+  return publicFetch('/v1/market/items')
 }
 
 export async function getPriceHistory(itemId: string, limit = 100) {
-  return apiFetch(`/v1/market/prices?item_id=${itemId}&limit=${limit}`)
+  return publicFetch(`/v1/market/prices?item_id=${itemId}&limit=${limit}`)
 }
 
 export async function getMarketEvents(limit = 14) {
-  return apiFetch(`/v1/market/events?limit=${limit}`)
+  return publicFetch(`/v1/market/events?limit=${limit}`)
+}
+
+export async function getLeaderboard() {
+  return publicFetch('/v1/candies/leaderboard')
 }

@@ -1,12 +1,29 @@
 import { useEffect, useState } from 'react'
-import { getHistory } from '../lib/api'
+import { getMyAgents, getAgentHistory } from '../lib/api'
 
 export default function History() {
   const [entries, setEntries] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [noAgent, setNoAgent] = useState(false)
 
   useEffect(() => {
-    getHistory().then(d => setEntries(d.entries || []))
+    getMyAgents().then(d => {
+      const agents = d.agents || []
+      if (agents.length === 0) {
+        setNoAgent(true)
+        setLoading(false)
+        return
+      }
+      const agentId = localStorage.getItem('wonka_selected_agent') || agents[0].id
+      getAgentHistory(agentId).then(h => {
+        setEntries(h.entries || [])
+        setLoading(false)
+      })
+    })
   }, [])
+
+  if (loading) return <div className="text-center py-12 text-gray-400">載入中...</div>
+  if (noAgent) return <div className="text-center py-12 text-gray-400">請先建立 Agent</div>
 
   return (
     <div className="space-y-6">
