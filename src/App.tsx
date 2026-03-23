@@ -8,7 +8,7 @@ import History from './pages/History'
 import PriceChart from './pages/PriceChart'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import MyAgents from './pages/MyAgents'
+
 
 function isLoggedIn() {
   return !!localStorage.getItem('wonka_token')
@@ -31,7 +31,7 @@ export default function App() {
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/history" element={<History />} />
           <Route path="/prices" element={<PriceChart />} />
-          <Route path="/agents" element={<MyAgents />} />
+
         </Route>
       </Routes>
     </BrowserRouter>
