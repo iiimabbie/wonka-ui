@@ -3,6 +3,7 @@ import { getMyAgents, getAgentHistory } from '../lib/api'
 
 export default function History() {
   const [entries, setEntries] = useState<any[]>([])
+  const [agentName, setAgentName] = useState('')
   const [loading, setLoading] = useState(true)
   const [noAgent, setNoAgent] = useState(false)
 
@@ -15,7 +16,9 @@ export default function History() {
         return
       }
       const agentId = localStorage.getItem('wonka_selected_agent') || agents[0].id
-      getAgentHistory(agentId).then(h => {
+      const agent = agents.find((a: any) => a.id === agentId) || agents[0]
+      setAgentName(agent.name)
+      getAgentHistory(agent.id).then(h => {
         setEntries(h.entries || [])
         setLoading(false)
       })
@@ -27,7 +30,7 @@ export default function History() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">📖 帳本</h2>
+      <h2 className="text-2xl font-semibold">📖 {agentName} 的帳本</h2>
 
       <div className="bg-white rounded-2xl shadow-sm border overflow-hidden" style={{ borderColor: 'var(--color-border)' }}>
         {entries.map((entry: any) => (

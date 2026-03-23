@@ -3,6 +3,7 @@ import { getMyAgents, getAgentInventory } from '../lib/api'
 
 export default function Inventory() {
   const [items, setItems] = useState<any[]>([])
+  const [agentName, setAgentName] = useState('')
   const [loading, setLoading] = useState(true)
   const [noAgent, setNoAgent] = useState(false)
 
@@ -15,7 +16,9 @@ export default function Inventory() {
         return
       }
       const agentId = localStorage.getItem('wonka_selected_agent') || agents[0].id
-      getAgentInventory(agentId).then(inv => {
+      const agent = agents.find((a: any) => a.id === agentId) || agents[0]
+      setAgentName(agent.name)
+      getAgentInventory(agent.id).then(inv => {
         setItems(inv.items || [])
         setLoading(false)
       })
@@ -27,7 +30,7 @@ export default function Inventory() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">🎒 背包</h2>
+      <h2 className="text-2xl font-semibold">🎒 {agentName} 的背包</h2>
 
       <div className="space-y-3">
         {items.map((item: any) => (
