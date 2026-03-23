@@ -91,3 +91,13 @@ export async function getMarketEvents(limit = 14) {
 export async function getLeaderboard() {
   return publicFetch('/v1/candies/leaderboard')
 }
+
+// Admin
+export async function adminGetAgents() { return userFetch('/v1/admin/agents') }
+export async function adminPatchAgent(agentId: string, data: any) { return userFetch(`/v1/admin/agents/${agentId}`, { method: 'PATCH', body: JSON.stringify(data) }) }
+export async function adminGetUsers() { return userFetch('/v1/admin/users') }
+export async function adminDeleteUser(userId: string) { return userFetch(`/v1/admin/users/${userId}`, { method: 'DELETE' }) }
+export async function adminAdjust(agentId: string, delta: number, reason: string) { return userFetch('/v1/admin/adjust', { method: 'POST', body: JSON.stringify({ agent_id: agentId, delta, reason }) }) }
+export async function adminRefreshMarket() { return userFetch('/v1/admin/market/refresh', { method: 'POST' }) }
+export async function adminGetSettings() { return userFetch('/v1/admin/settings') }
+export async function adminPutSettings(data: any) { return userFetch('/v1/admin/settings', { method: 'PUT', body: JSON.stringify(data) }) }
