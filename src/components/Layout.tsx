@@ -30,7 +30,6 @@ export default function Layout() {
 
   const navItems = [
     { to: '/', label: '🏠 首頁' },
-    { to: '/agents', label: '🤖 我的 Agent' },
     { to: '/market', label: '🏪 菜市場' },
     { to: '/inventory', label: '🎒 背包' },
     { to: '/leaderboard', label: '🏆 排行榜' },
