@@ -1,4 +1,4 @@
-import { Outlet, NavLink } from 'react-router-dom'
+import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { getMyAgents } from '../lib/api'
 
@@ -7,6 +7,7 @@ export default function Layout() {
   const displayName = user.name || user.email || '使用者'
   const [agents, setAgents] = useState<any[]>([])
   const [selectedAgent, setSelectedAgent] = useState(localStorage.getItem('wonka_selected_agent') || '')
+  const location = useLocation()
 
   useEffect(() => {
     getMyAgents().then(d => {
@@ -30,7 +31,7 @@ export default function Layout() {
 
   const navItems = [
     { to: '/', label: '🏠 首頁' },
-    { to: '/market', label: '🏪 菜市場' },
+    { to: '/market', label: '🏪 糖果市場' },
     { to: '/inventory', label: '🎒 背包' },
     { to: '/leaderboard', label: '🏆 排行榜' },
     { to: '/prices', label: '📈 走勢' },
@@ -46,10 +47,10 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <header className="bg-white border-b" style={{ borderColor: 'var(--color-border)' }}>
+      <header className="bg-white" style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03)' }}>
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <h1 className="text-lg font-semibold" style={{ color: 'var(--color-primary)' }}>
+            <h1 className="text-lg font-semibold logo-hover cursor-default" style={{ color: 'var(--color-primary)' }}>
               🍬 Wonka
             </h1>
             <nav className="flex gap-1">
@@ -107,7 +108,9 @@ export default function Layout() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-6">
-        <Outlet />
+        <div key={location.pathname} className="page-enter">
+          <Outlet />
+        </div>
       </main>
     </div>
   )

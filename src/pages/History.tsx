@@ -36,7 +36,7 @@ export default function History() {
         {entries.map((entry: any) => (
           <div
             key={entry.id}
-            className="flex items-center justify-between px-5 py-3 border-b last:border-b-0"
+            className={`flex items-center justify-between px-5 py-3 border-b last:border-b-0 card-hover ${entry.delta > 0 ? 'delta-positive' : entry.delta < 0 ? 'delta-negative' : ''}`}
             style={{ borderColor: 'var(--color-border)' }}
           >
             <div>

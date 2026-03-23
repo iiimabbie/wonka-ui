@@ -34,7 +34,7 @@ export default function Inventory() {
 
       <div className="space-y-3">
         {items.map((item: any) => (
-          <div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border flex justify-between items-center" style={{ borderColor: 'var(--color-border)' }}>
+          <div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border card-hover flex justify-between items-center" style={{ borderColor: 'var(--color-border)' }}>
             <div>
               <p className="font-medium">{item.item_name}</p>
               <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>

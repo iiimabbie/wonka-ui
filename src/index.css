@@ -14,8 +14,128 @@
   --color-accent: #F59E0B;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background-color: var(--color-bg);
+  background: linear-gradient(180deg, #FFF8F0 0%, #FAF9F5 100%);
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Page transition */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: fadeSlideIn 0.3s ease-out;
+}
+
+/* Card hover */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(217, 119, 6, 0.1), 0 4px 10px -5px rgba(0, 0, 0, 0.05);
+}
+
+/* Auth card entrance */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.auth-card {
+  animation: cardEntrance 0.35s ease-out;
+}
+
+/* Leaderboard stagger */
+@keyframes staggerIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.stagger-item {
+  animation: staggerIn 0.3s ease-out backwards;
+}
+
+/* Pulsing live dot */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Logo bounce on hover */
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.logo-hover:hover {
+  animation: bounce-subtle 0.4s ease;
+}
+
+/* Delta tints */
+.delta-positive {
+  background-color: rgba(16, 185, 129, 0.06);
+}
+.delta-negative {
+  background-color: rgba(239, 68, 68, 0.06);
+}
+
+/* Floating candy background for auth */
+.auth-bg {
+  position: relative;
+  overflow: hidden;
+}
+.auth-bg::before {
+  content: '🍬🍭🍫🍩🧁🍪';
+  position: fixed;
+  top: 15%;
+  left: 5%;
+  font-size: 2rem;
+  opacity: 0.06;
+  letter-spacing: 3rem;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.auth-bg::after {
+  content: '🍫🍬🧁🍭🍪🍩';
+  position: fixed;
+  bottom: 20%;
+  right: 5%;
+  font-size: 2rem;
+  opacity: 0.06;
+  letter-spacing: 3rem;
+  pointer-events: none;
+  white-space: nowrap;
 }
