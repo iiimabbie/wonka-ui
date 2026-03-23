@@ -36,6 +36,7 @@ export default function Layout() {
     { to: '/leaderboard', label: '🏆 排行榜' },
     { to: '/prices', label: '📈 走勢' },
     { to: '/history', label: '📖 帳本' },
+    ...(user.role === 'admin' ? [{ to: '/admin', label: '⚙️ 管理' }] : []),
   ]
 
   const handleLogout = () => {
