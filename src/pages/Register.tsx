@@ -42,8 +42,8 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <div className="bg-white rounded-2xl shadow-sm border p-8 w-full max-w-sm" style={{ borderColor: 'var(--color-border)' }}>
+    <div className="min-h-screen flex items-center justify-center auth-bg" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FAF9F5 100%)' }}>
+      <div className="bg-white rounded-2xl shadow-sm border p-8 w-full max-w-sm auth-card" style={{ borderColor: 'var(--color-border)' }}>
         <h1 className="text-2xl font-bold text-center mb-1">🍬 Wonka</h1>
         <p className="text-center text-sm mb-6" style={{ color: 'var(--color-text-secondary)' }}>
           建立新帳號

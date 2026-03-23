@@ -107,8 +107,8 @@ export default function Home() {
           {agents.map((agent: any) => (
             <div
               key={agent.id}
-              className="bg-white rounded-2xl p-5 shadow-sm border flex items-center justify-between"
-              style={{ borderColor: 'var(--color-border)' }}
+              className="bg-white rounded-2xl p-5 shadow-sm border card-hover flex items-center justify-between"
+              style={{ borderColor: 'var(--color-border)', background: 'linear-gradient(135deg, #FFFFFF 0%, #FFFCF5 100%)' }}
             >
               <div>
                 <p className="font-semibold text-lg">{agent.name}</p>
@@ -119,7 +119,7 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-              <p className="text-2xl font-bold">{agent.balance ?? '—'} 🍬</p>
+              <p className="text-3xl font-bold" style={{ color: 'var(--color-primary)' }}>{agent.balance ?? '—'} 🍬</p>
             </div>
           ))}
         </div>

@@ -14,11 +14,14 @@ export default function Market() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">🏪 菜市場</h2>
+      <h2 className="text-2xl font-semibold">🏪 糖果市場</h2>
 
       {data.event?.description && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
-          <p className="text-sm font-medium text-amber-800">📰 今日事件</p>
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 relative overflow-hidden">
+          <div className="flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-amber-500 pulse-dot" />
+            <p className="text-sm font-medium text-amber-800">📰 今日事件</p>
+          </div>
           <p className="text-amber-900 mt-1">{data.event.description}</p>
         </div>
       )}
@@ -30,7 +33,7 @@ export default function Market() {
           const isUp = diff > 0
 
           return (
-            <div key={item.id} className="bg-white rounded-2xl p-5 shadow-sm border" style={{ borderColor: 'var(--color-border)' }}>
+            <div key={item.id} className="bg-white rounded-2xl p-5 shadow-sm border card-hover" style={{ borderColor: 'var(--color-border)' }}>
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-semibold text-lg">{item.item_name}</h3>
@@ -42,8 +45,10 @@ export default function Market() {
                   </span>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold">{item.price} 🍬</p>
-                  <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                  <p className="text-2xl font-bold px-3 py-1 rounded-xl" style={{ backgroundColor: '#FFFBEB' }}>
+                    {item.price} 🍬
+                  </p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--color-text-secondary)' }}>
                     底價 {item.base_price}
                   </p>
                   {diff !== 0 && (
