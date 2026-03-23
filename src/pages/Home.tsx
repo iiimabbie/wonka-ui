@@ -142,16 +142,16 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col items-end gap-2">
+                <p className="text-3xl font-bold" style={{ color: 'var(--color-primary)' }}>{agent.balance ?? '—'} 🍬</p>
                 <button
                   onClick={() => handleRegen(agent.id, agent.name)}
                   disabled={regenBusy === agent.id}
-                  className="px-3 py-1.5 rounded-lg text-xs transition-colors shrink-0"
+                  className="px-3 py-1.5 rounded-lg text-xs transition-colors"
                   style={{ backgroundColor: '#FEF3C7', color: 'var(--color-primary)' }}
                 >
                   {regenBusy === agent.id ? '產生中…' : '🔑 重新產生 Key'}
                 </button>
-                <p className="text-3xl font-bold min-w-[80px] text-right" style={{ color: 'var(--color-primary)' }}>{agent.balance ?? '—'} 🍬</p>
               </div>
             </div>
           ))}
