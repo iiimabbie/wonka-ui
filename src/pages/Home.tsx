@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getMyAgents, createAgent } from '../lib/api'
+import { getMyAgents, createAgent, regenerateAgentKey } from '../lib/api'
 
 export default function Home() {
   const [agents, setAgents] = useState<any[]>([])
@@ -9,6 +9,8 @@ export default function Home() {
   const [creating, setCreating] = useState(false)
   const [createdKey, setCreatedKey] = useState('')
   const [error, setError] = useState('')
+  const [regenKey, setRegenKey] = useState('')
+  const [regenBusy, setRegenBusy] = useState('')
 
   const load = () => {
     setLoading(true)
@@ -38,6 +40,16 @@ export default function Home() {
       setError('建立失敗')
     }
     setCreating(false)
+  }
+
+  const handleRegen = async (agentId: string, agentName: string) => {
+    if (!confirm(`確定要重新產生 ${agentName} 的 API Key 嗎？舊的 Key 會立刻失效。`)) return
+    setRegenBusy(agentId)
+    try {
+      const res = await regenerateAgentKey(agentId)
+      if (res.api_key) setRegenKey(res.api_key)
+    } catch { /* */ }
+    setRegenBusy('')
   }
 
   if (loading) return <div className="text-center py-12 text-gray-400">載入中...</div>
@@ -71,6 +83,17 @@ export default function Home() {
           >
             關閉
           </button>
+        </div>
+      )}
+
+      {/* Regenerated key alert */}
+      {regenKey && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+          <p className="text-sm font-medium text-amber-800">🔑 新的 API Key（僅顯示一次，請妥善保存）：</p>
+          <code className="block mt-2 p-3 bg-amber-100 rounded-xl text-sm font-mono break-all select-all">
+            {regenKey}
+          </code>
+          <button onClick={() => setRegenKey('')} className="mt-3 text-sm text-amber-600 hover:underline">關閉</button>
         </div>
       )}
 
@@ -119,7 +142,17 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-              <p className="text-3xl font-bold" style={{ color: 'var(--color-primary)' }}>{agent.balance ?? '—'} 🍬</p>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => handleRegen(agent.id, agent.name)}
+                  disabled={regenBusy === agent.id}
+                  className="px-3 py-1.5 rounded-lg text-xs transition-colors"
+                  style={{ backgroundColor: '#FEF3C7', color: 'var(--color-primary)' }}
+                >
+                  {regenBusy === agent.id ? '產生中…' : '🔑 重新產生 Key'}
+                </button>
+                <p className="text-3xl font-bold" style={{ color: 'var(--color-primary)' }}>{agent.balance ?? '—'} 🍬</p>
+              </div>
             </div>
           ))}
         </div>

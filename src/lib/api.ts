@@ -101,3 +101,5 @@ export async function adminAdjust(agentId: string, delta: number, reason: string
 export async function adminRefreshMarket() { return userFetch('/v1/admin/market/refresh', { method: 'POST' }) }
 export async function adminGetSettings() { return userFetch('/v1/admin/settings') }
 export async function adminPutSettings(data: any) { return userFetch('/v1/admin/settings', { method: 'PUT', body: JSON.stringify(data) }) }
+export async function regenerateAgentKey(agentId: string) { return userFetch(`/v1/agents/${agentId}/regenerate-key`, { method: 'POST' }) }
+export async function adminRegenerateAgentKey(agentId: string) { return userFetch(`/v1/admin/agents/${agentId}/regenerate-key`, { method: 'POST' }) }

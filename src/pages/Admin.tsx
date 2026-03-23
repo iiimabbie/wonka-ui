@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   adminGetAgents, adminPatchAgent, adminGetUsers, adminDeleteUser,
   adminAdjust, adminRefreshMarket, adminGetSettings, adminPutSettings,
+  adminRegenerateAgentKey,
 } from '../lib/api'
 
 const tabs = [
@@ -45,6 +46,7 @@ function AgentsTab() {
   const [delta, setDelta] = useState('')
   const [reason, setReason] = useState('')
   const [busy, setBusy] = useState(false)
+  const [regenKey, setRegenKey] = useState('')
 
   const load = () => { adminGetAgents().then(d => { setAgents(d.agents || []); setLoading(false) }) }
   useEffect(load, [])
@@ -67,10 +69,25 @@ function AgentsTab() {
     setBusy(false)
   }
 
+  const handleRegen = async (id: string, name: string) => {
+    if (!confirm(`確定要重新產生 ${name} 的 API Key 嗎？`)) return
+    setBusy(true)
+    const res = await adminRegenerateAgentKey(id)
+    if (res.api_key) setRegenKey(res.api_key)
+    setBusy(false)
+  }
+
   if (loading) return <p style={{ color: 'var(--color-text-secondary)' }}>載入中…</p>
 
   return (
     <div className="space-y-3">
+      {regenKey && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-3">
+          <p className="text-sm font-medium text-amber-800">🔑 新 API Key：</p>
+          <code className="block mt-2 p-3 bg-amber-100 rounded-xl text-sm font-mono break-all select-all">{regenKey}</code>
+          <button onClick={() => setRegenKey('')} className="mt-3 text-sm text-amber-600 hover:underline">關閉</button>
+        </div>
+      )}
       {agents.map((a: any) => (
         <div key={a.id} className="bg-white rounded-2xl p-5 shadow-sm border card-hover">
           <div className="flex items-center justify-between">
@@ -83,6 +100,12 @@ function AgentsTab() {
               </span>
             </div>
             <div className="flex gap-2">
+              <button
+                onClick={() => handleRegen(a.id, a.name)}
+                disabled={busy}
+                className="px-3 py-1.5 rounded-lg text-sm transition-colors"
+                style={{ backgroundColor: '#E0E7FF', color: '#4338CA' }}
+              >🔑 Key</button>
               <button
                 onClick={() => setAdjustId(adjustId === a.id ? null : a.id)}
                 className="px-3 py-1.5 rounded-lg text-sm transition-colors"
@@ -218,14 +241,21 @@ function SettingsTab() {
 /* ── Market Tab ── */
 function MarketTab() {
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<any>(() => {
+    try { return JSON.parse(sessionStorage.getItem('admin_refresh_result') || 'null') } catch { return null }
+  })
 
   const refresh = async () => {
     setLoading(true); setResult(null)
     const res = await adminRefreshMarket()
     setResult(res)
+    sessionStorage.setItem('admin_refresh_result', JSON.stringify(res))
     setLoading(false)
   }
+
+  const eventText = result?.event
+    ? (typeof result.event === 'string' ? result.event : result.event.description || JSON.stringify(result.event))
+    : null
 
   return (
     <div className="space-y-4">
@@ -233,21 +263,44 @@ function MarketTab() {
         className="px-6 py-2.5 rounded-xl text-sm text-white font-medium" style={{ backgroundColor: 'var(--color-primary)' }}>
         {loading ? '刷新中…' : '🔄 手動刷新市場'}
       </button>
+      {result?.ai_fallback && (
+        <div className="bg-amber-50 rounded-xl p-3 border border-amber-200">
+          <p className="text-sm text-amber-700">⚠️ AI 定價失敗，使用隨機定價</p>
+          {result.ai_error && <p className="text-xs text-amber-500 mt-1">{result.ai_error}</p>}
+        </div>
+      )}
       {result && (
         <div className="bg-white rounded-2xl p-5 shadow-sm border">
-          <h4 className="font-medium mb-2" style={{ color: 'var(--color-text)' }}>刷新結果</h4>
-          {result.event && <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>事件：{result.event.name || result.event.description || JSON.stringify(result.event)}</p>}
-          {result.listings && (
-            <div className="mt-2 space-y-1">
-              {result.listings.map((l: any, i: number) => (
-                <p key={i} className="text-sm" style={{ color: 'var(--color-text)' }}>
-                  {l.item_name || l.name} — 🍬 {l.price}
-                </p>
-              ))}
+          <h4 className="font-medium mb-3" style={{ color: 'var(--color-text)' }}>刷新結果</h4>
+          {eventText && (
+            <div className="mb-4 p-3 rounded-xl" style={{ backgroundColor: '#FEF3C7' }}>
+              <p className="text-xs font-medium mb-1" style={{ color: 'var(--color-primary)' }}>📰 今日事件</p>
+              <p className="text-sm" style={{ color: 'var(--color-text)' }}>{eventText}</p>
             </div>
           )}
-          {!result.event && !result.listings && (
-            <pre className="text-xs mt-1 overflow-auto" style={{ color: 'var(--color-text-secondary)' }}>{JSON.stringify(result, null, 2)}</pre>
+          {!eventText && !result.ai_fallback && (
+            <p className="text-sm mb-3" style={{ color: 'var(--color-text-secondary)' }}>（無事件）</p>
+          )}
+          {result.listings && (
+            <div className="space-y-2">
+              {result.listings.map((l: any, i: number) => {
+                const pct = l.delta ? (l.delta * 100).toFixed(0) : null
+                const isUp = l.delta > 0
+                return (
+                  <div key={i} className="flex items-center justify-between py-2 px-3 rounded-xl" style={{ backgroundColor: '#FAFAF8' }}>
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>{l.item_name || l.name}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-medium" style={{ color: 'var(--color-primary)' }}>🍬 {l.price}</span>
+                      {pct && (
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${isUp ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          {isUp ? '↑' : '↓'} {Math.abs(Number(pct))}%
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           )}
         </div>
       )}
