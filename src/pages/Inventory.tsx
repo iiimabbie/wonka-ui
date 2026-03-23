@@ -5,30 +5,26 @@ interface GroupedItem {
   item_name: string
   item_type: string
   count: number
-  avg_price: number
-  total_cost: number
+  price: number
 }
 
 function groupItems(items: any[]): GroupedItem[] {
   const map = new Map<string, GroupedItem>()
   for (const item of items) {
-    const key = item.item_name
+    const key = `${item.item_name}|${item.acquired_price}`
     const existing = map.get(key)
     if (existing) {
-      existing.total_cost += item.acquired_price
       existing.count += 1
-      existing.avg_price = Math.round((existing.total_cost / existing.count) * 100) / 100
     } else {
       map.set(key, {
         item_name: item.item_name,
         item_type: item.item_type,
         count: 1,
-        avg_price: item.acquired_price,
-        total_cost: item.acquired_price,
+        price: item.acquired_price,
       })
     }
   }
-  return Array.from(map.values()).sort((a, b) => b.total_cost - a.total_cost)
+  return Array.from(map.values()).sort((a, b) => a.item_name.localeCompare(b.item_name) || a.price - b.price)
 }
 
 export default function Inventory() {
@@ -66,20 +62,17 @@ export default function Inventory() {
 
       <div className="space-y-3">
         {grouped.map((g) => (
-          <div key={g.item_name} className="bg-white rounded-2xl p-4 shadow-sm border card-hover flex justify-between items-center" style={{ borderColor: 'var(--color-border)' }}>
+          <div key={`${g.item_name}-${g.price}`} className="bg-white rounded-2xl p-4 shadow-sm border card-hover flex justify-between items-center" style={{ borderColor: 'var(--color-border)' }}>
             <div>
               <p className="font-medium">
                 {g.item_name}
                 {g.count > 1 && <span className="ml-2 text-sm px-2 py-0.5 rounded-full bg-amber-100" style={{ color: 'var(--color-primary)' }}>×{g.count}</span>}
               </p>
               <p className="text-xs mt-1" style={{ color: 'var(--color-text-secondary)' }}>
-                {g.count > 1 ? `均價 ${g.avg_price}` : `買入 ${g.avg_price}`} 🍬 · {g.item_type}
+                {g.item_type}
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-lg font-bold" style={{ color: 'var(--color-primary)' }}>{g.total_cost} 🍬</p>
-              <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>總成本</p>
-            </div>
+            <p className="text-lg font-bold" style={{ color: 'var(--color-primary)' }}>{g.price} 🍬</p>
           </div>
         ))}
         {grouped.length === 0 && (
