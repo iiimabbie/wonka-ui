@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import { getMyAgents } from '../lib/api'
 
 export default function Layout() {
-  const user = JSON.parse(localStorage.getItem('wonka_user') || '{}')
+  let user: any = {}
+  try { user = JSON.parse(localStorage.getItem('wonka_user') || '{}') } catch { user = {} }
   const displayName = user.name || user.email || '使用者'
   const [agents, setAgents] = useState<any[]>([])
   const [selectedAgent, setSelectedAgent] = useState(localStorage.getItem('wonka_selected_agent') || '')

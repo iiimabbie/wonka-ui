@@ -54,7 +54,8 @@ export default function Home() {
 
   if (loading) return <div className="text-center py-12 text-gray-400">載入中...</div>
 
-  const user = JSON.parse(localStorage.getItem('wonka_user') || '{}')
+  let user: any = {}
+  try { user = JSON.parse(localStorage.getItem('wonka_user') || '{}') } catch { user = {} }
 
   return (
     <div className="space-y-6">

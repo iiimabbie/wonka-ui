@@ -16,7 +16,8 @@ function isLoggedIn() {
 }
 
 function isAdmin() {
-  const user = JSON.parse(localStorage.getItem('wonka_user') || '{}')
+  let user: any = {}
+  try { user = JSON.parse(localStorage.getItem('wonka_user') || '{}') } catch { user = {} }
   return user.role === 'admin'
 }
 
