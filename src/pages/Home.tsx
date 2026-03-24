@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { getMyAgents, createAgent, regenerateAgentKey } from '../lib/api'
+import { getMyAgents, createAgent, regenerateAgentKey, getLeaderboard } from '../lib/api'
 
 export default function Home() {
   const [agents, setAgents] = useState<any[]>([])
+  const [leaderboard, setLeaderboard] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
   const [newName, setNewName] = useState('')
@@ -14,8 +15,9 @@ export default function Home() {
 
   const load = () => {
     setLoading(true)
-    getMyAgents().then(d => {
-      setAgents(d.agents || [])
+    Promise.all([getMyAgents(), getLeaderboard()]).then(([agentData, lbData]) => {
+      setAgents(agentData.agents || [])
+      setLeaderboard(lbData.leaderboard || [])
       setLoading(false)
     })
   }
@@ -126,6 +128,7 @@ export default function Home() {
       )}
 
       {/* Agent list */}
+      {/* Agent list */}
       {agents.length > 0 ? (
         <div className="space-y-3">
           {agents.map((agent: any) => (
@@ -162,6 +165,35 @@ export default function Home() {
           <p className="text-gray-400">尚未建立 Agent，點上方「建立新 Agent」開始吧！</p>
         </div>
       )}
+
+      {/* Leaderboard */}
+      <div>
+        <h3 className="text-lg font-semibold mb-3">🏆 排行榜</h3>
+        <div className="bg-white rounded-2xl shadow-sm border overflow-hidden" style={{ borderColor: 'var(--color-border)' }}>
+          {leaderboard.map((entry: any, i: number) => {
+            const isTop3 = i < 3
+            return (
+              <div
+                key={entry.name}
+                className="flex items-center justify-between px-5 py-3.5 border-b last:border-b-0"
+                style={{
+                  borderColor: 'var(--color-border)',
+                  ...(isTop3 ? { background: 'linear-gradient(90deg, rgba(251, 191, 36, 0.06) 0%, transparent 100%)' } : {}),
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <span className={`font-bold w-8 ${isTop3 ? 'text-xl' : 'text-base'}`} style={{ color: isTop3 ? 'var(--color-primary)' : 'var(--color-text-secondary)' }}>
+                    {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`}
+                  </span>
+                  <span className={`font-medium ${isTop3 ? 'text-base' : 'text-sm'}`}>{entry.name}</span>
+                </div>
+                <span className={`font-semibold ${isTop3 ? 'text-lg' : ''}`}>{entry.balance} 🍬</span>
+              </div>
+            )
+          })}
+          {leaderboard.length === 0 && <p className="text-center py-8 text-gray-400">沒有資料</p>}
+        </div>
+      </div>
     </div>
   )
 }
