@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useLocation } from 'react-router-dom'
+import { Outlet, NavLink, useLocation, Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { getMyAgents } from '../lib/api'
 
@@ -31,7 +31,6 @@ export default function Layout() {
   const selectedAgentName = agents.find(a => a.id === selectedAgent)?.name || ''
 
   const navItems = [
-    { to: '/', label: '🏠 首頁' },
     { to: '/market', label: '🏪 糖果市場' },
     { to: '/inventory', label: '🎒 背包' },
     { to: '/leaderboard', label: '🏆 排行榜' },
@@ -52,9 +51,9 @@ export default function Layout() {
       <header className="bg-white" style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03)' }}>
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <h1 className="text-lg font-semibold logo-hover cursor-default" style={{ color: 'var(--color-primary)' }}>
+            <Link to="/" className="text-lg font-semibold logo-hover" style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>
               🍬 Wonka
-            </h1>
+            </Link>
             <nav className="flex gap-1">
               {navItems.map(item => (
                 <NavLink
