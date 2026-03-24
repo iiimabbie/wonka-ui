@@ -33,7 +33,6 @@ export default function Layout() {
   const navItems = [
     { to: '/market', label: '🏪 糖果市場' },
     { to: '/inventory', label: '🎒 背包' },
-    { to: '/leaderboard', label: '🏆 排行榜' },
     { to: '/prices', label: '📈 走勢' },
     { to: '/history', label: '📖 帳本' },
     ...(user.role === 'admin' ? [{ to: '/admin', label: '⚙️ 管理' }] : []),
