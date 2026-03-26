@@ -31,7 +31,14 @@ export default function Leaderboard() {
                 </span>
                 <span className={`font-medium ${isTop3 ? 'text-base' : 'text-sm'}`}>{entry.name}</span>
               </div>
-              <span className={`font-semibold ${isTop3 ? 'text-lg' : ''}`}>{entry.balance} 🍬</span>
+              <div className="text-right">
+                <span className={`font-semibold ${isTop3 ? 'text-lg' : ''}`}>{entry.total_assets ?? entry.balance} 🍬</span>
+                {entry.portfolio_value > 0 && (
+                  <div className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                    {entry.balance}💰 + {entry.portfolio_value}📦
+                  </div>
+                )}
+              </div>
             </div>
           )
         })}
