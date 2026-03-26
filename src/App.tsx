@@ -3,7 +3,6 @@ import Layout from './components/Layout'
 import Home from './pages/Home'
 import Market from './pages/Market'
 import Inventory from './pages/Inventory'
-import Leaderboard from './pages/Leaderboard'
 import History from './pages/History'
 import PriceChart from './pages/PriceChart'
 import Login from './pages/Login'
@@ -39,7 +38,6 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/market" element={<Market />} />
           <Route path="/inventory" element={<Inventory />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/history" element={<History />} />
           <Route path="/prices" element={<PriceChart />} />
           <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
